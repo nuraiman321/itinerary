@@ -1,6 +1,7 @@
+
 "use client";
 
-import { FC } from "react";
+import { FC, useState, useEffect } from "react";
 import { useTheme } from "next-themes";
 import clsx from "clsx";
 
@@ -11,7 +12,12 @@ export interface ThemeSwitchProps {
 }
 
 export const ThemeSwitch: FC<ThemeSwitchProps> = ({ className }) => {
+  const [mounted, setMounted] = useState(false);
   const { setTheme, resolvedTheme } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const isLight = resolvedTheme === "light";
 
@@ -30,7 +36,11 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({ className }) => {
       )}
       onClick={handleToggle}
     >
-      {isLight ? <SunFilledIcon size={22} /> : <MoonFilledIcon size={22} />}
+      {mounted ? (
+        isLight ? <SunFilledIcon size={22} /> : <MoonFilledIcon size={22} />
+      ) : (
+        <span aria-hidden="true" style={{ width: 22, height: 22, display: "inline-block" }} />
+      )}
     </button>
   );
 };
